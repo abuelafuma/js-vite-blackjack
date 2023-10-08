@@ -1,11 +1,3 @@
-import _ from 'underscore';
-// USO DE ALIAS se debe cambiar el nombre de las variable y/o estructuras por el alias
-// import { crearDeck as crearNuevoDeck } from './usecases/crear-deck';
-// import { crearDeck } from './usecases/crear-deck'; // podemos substituirlo por el que hay debajo, ya que es una exportación por defecto.
-import crearDeck, { miNombre }from './usecases/crear-deck' // No hace falta poner la esxtension del archivo( si es un index, solo poner el nombre d elacarpeta que lo contiene)
-console.log({ miNombre });
-import {pedirCarta} from './usecases/pedir-carta'
-
 /**
  * 2C = Two of Clubs
  * 2D = Two of Diamonds
@@ -30,20 +22,38 @@ const divCartasComputadora = document.querySelector('#computadora-cartas');
 
 const puntosHTML = document.querySelectorAll('small');
 
-// Crear Deck 
-deck = crearDeck (tipos, especiales);
-// deck = crearDeck ();
-console.log(deck);
+// Esta función crea un nuevo deck
+const crearDeck = () => {
+
+    for( let i = 2; i <= 10; i++ ) {
+        for( let tipo of tipos ) {
+            deck.push( i + tipo);
+        }
+    }
+
+    for( let tipo of tipos ) {
+        for( let esp of especiales ) {
+            deck.push( esp + tipo);
+        }
+    }
+    // console.log( deck );
+    deck = _.shuffle( deck );
+    console.log( deck );
+    return deck;
+}
+
+crearDeck();
+
 
 // Esta función me permite tomar una carta
-//  const pedirCarta = (deck) => {
+const pedirCarta = () => {
 
-//     if ( deck.length === 0 ) {
-//         throw 'No hay cartas en el deck';
-//     }
-//     const carta = deck.pop();
-//     return carta;
-// }
+    if ( deck.length === 0 ) {
+        throw 'No hay cartas en el deck';
+    }
+    const carta = deck.pop();
+    return carta;
+}
 
 // pedirCarta();
 const valorCarta = ( carta ) => {
@@ -58,7 +68,7 @@ const valorCarta = ( carta ) => {
 const turnoComputadora = ( puntosMinimos ) => {
 
     do {
-        const carta = pedirCarta( deck );
+        const carta = pedirCarta();
 
         puntosComputadora = puntosComputadora + valorCarta( carta );
         puntosHTML[1].innerText = puntosComputadora;
@@ -93,7 +103,7 @@ const turnoComputadora = ( puntosMinimos ) => {
 // Eventos
 btnPedir.addEventListener('click', () => {
 
-    const carta = pedirCarta( deck );
+    const carta = pedirCarta();
     
     puntosJugador = puntosJugador + valorCarta( carta );
     puntosHTML[0].innerText = puntosJugador;
@@ -146,5 +156,3 @@ btnNuevo.addEventListener('click', () => {
     btnDetener.disabled = false;
 
 });
-
-// import { setupCounter } from './counter.js'
